@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0500">
+<meta name="description" content="Tayf · طيف: retro focus and sleep sounds. Binaural beats, soft noise, ambient scenes and short words of encouragement.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Tayf">
+<title>TAYF</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/tayf.css">
+<link rel="stylesheet" href="css/ambient.css">
+<link rel="stylesheet" href="css/dialogs.css">
+<link rel="stylesheet" href="css/phone.css">
+</head>
+<body>
+<script>
+try {
+  // One-time migration of saved data from the old spectrume and focuswave keys
+  [['spectrume_lang_v1','tayf_lang_v1'],['focuswave_lang_v1','tayf_lang_v1'],
+   ['spectrume_theme_v1','tayf_theme_v1'],['focuswave_theme_v1','tayf_theme_v1'],
+   ['spectrume.customs.v1','tayf.customs.v1'],['focuswave.customs.v1','tayf.customs.v1']].forEach(function(p){
+    var old = localStorage.getItem(p[0]);
+    if (old !== null && localStorage.getItem(p[1]) === null) localStorage.setItem(p[1], old);
+  });
+} catch(e) {}
+try {
+  if (localStorage.getItem('tayf_lang_v1') === 'ar') {
+    document.body.classList.add('lang-ar');
+    document.documentElement.dir = 'rtl';
+    document.documentElement.lang = 'ar';
+  }
+} catch(e) {}
+</script>
+
+<div class="header" id="topBar">
+  <div class="brand"><span class="status-led" id="ledIndicator"></span><span id="appTitleText" data-i18n="appTitle">tayf</span></div>
+  <div class="icon-row">
+    <div class="page-switch" role="tablist">
+      <button type="button" class="hdr-btn page-tab active" data-page="main" role="tab" aria-selected="true" title="Tayf" aria-label="Tayf"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tayf"/></svg></button>
+      <button type="button" class="hdr-btn page-tab" data-page="ambient" role="tab" aria-selected="false" title="Ambient" aria-label="Ambient"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-amb"/></svg></button>
+    </div>
+    <div class="header-badges">
+      <button class="hdr-btn lang-btn" id="langBtn" data-i18n-aria="switchLang" title="Switch language" aria-label="Switch language">ع</button>
+      <button class="hdr-btn theme-btn" id="themeBtn" data-i18n-aria="switchTheme" title="Switch theme" aria-label="Switch theme" aria-haspopup="true" aria-expanded="false"><svg class="ico theme-ico" viewBox="0 0 24 24" aria-hidden="true"><use class="fig-boys" href="#figBoys"/><use class="fig-ladies" href="#figLadies"/><use class="fig-nerd" href="#figNerd"/></svg></button>
+      <button class="hdr-btn words-btn" id="wordsBtn" title="Words" aria-label="Words"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-words"/></svg></button>
+      <button class="hdr-btn info" id="creatorBtn" title="A word from the creator" aria-label="A word from the creator"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg></button>
+    </div>
+  </div>
+  <div class="theme-pop hidden" id="themePop" role="menu">
+    <button type="button" class="theme-opt" data-theme="amber" role="menuitemradio" aria-label="Boys"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#figBoys"/></svg></button>
+    <button type="button" class="theme-opt" data-theme="pink" role="menuitemradio" aria-label="Ladies"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#figLadies"/></svg></button>
+    <button type="button" class="theme-opt" data-theme="nerd" role="menuitemradio" aria-label="Nerd"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#figNerd"/></svg></button>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-tayf" viewBox="0 0 24 24"><path d="M2.5 12h4l2.2-5.5 3.6 11 3-8 1.7 2.5h4.5"/></symbol>
+    <symbol id="i-amb" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M3.8 16l4.4-4.1 4 3.6 2.8-2.5 5.2 4.6"/><circle cx="15.8" cy="9.4" r="1.4"/></symbol>
+    <symbol id="i-words" viewBox="0 0 24 24"><path d="M6 5h12a2.5 2.5 0 0 1 2.5 2.5v6.5a2.5 2.5 0 0 1-2.5 2.5h-6.2L7.4 20v-3.5H6A2.5 2.5 0 0 1 3.5 14V7.5A2.5 2.5 0 0 1 6 5z"/><path d="M8 9.6h8M8 12.6h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 11v5.2"/><path d="M12 7.8v.01" stroke-width="2.4"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4.5H5.5a1 1 0 0 0-1 1V9M15 4.5h3.5a1 1 0 0 1 1 1V9M9 19.5H5.5a1 1 0 0 1-1-1V15M15 19.5h3.5a1 1 0 0 0 1-1V15"/></symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4.5 9.4h2.8L12 5.6v12.8l-4.7-3.8H4.5a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-waves" viewBox="0 0 24 24"><path d="M15.4 9.3a3.9 3.9 0 0 1 0 5.4M18.1 6.7a7.6 7.6 0 0 1 0 10.6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></symbol>
+    <symbol id="i-head" viewBox="0 0 24 24"><path d="M4.5 15.2v-2.7a7.5 7.5 0 0 1 15 0v2.7"/><rect x="4.5" y="14.3" width="3.4" height="5.7" rx="1.3"/><rect x="16.1" y="14.3" width="3.4" height="5.7" rx="1.3"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M4 15.6v-3.1c0-.5.2-.9.5-1.2l1.6-1.6 1.4-3a1.8 1.8 0 0 1 1.6-1.1h5.8a1.8 1.8 0 0 1 1.6 1.1l1.4 3 1.6 1.6c.3.3.5.7.5 1.2v3.1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M6.1 9.7h11.8M6.2 16.6v2M17.8 16.6v2M7 13.1h1.6M15.4 13.1H17"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8M16 7h4M4 12h3M11 12h9M4 17h10M18 17h2"/><circle cx="14" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M6.5 4h9.2L19 7.3v11.2a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 18.5v-13A1.5 1.5 0 0 1 6.5 4z"/><path d="M8.5 4v4h6V4M8 20v-5h8v5"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7"/><path d="M12 10v3.5l2.4 1.6M9.5 3h5M17.8 7.2l1.3-1.3"/></symbol>
+    <symbol id="figBoys" viewBox="0 0 24 24"><path d="M12 10.3c-1-1.3-2.4-1.8-3.8-1.4-1.4.4-2.4 1.6-3.6 1.8-.8.1-1.3-.4-1.5-1.2-.9 1.2-1 3.2.1 4.5 1.4 1.5 4.4 1.7 6.6.5 1.1-.6 1.8-1.4 2.2-2.2.4.8 1.1 1.6 2.2 2.2 2.2 1.2 5.2 1 6.6-.5 1.1-1.3 1-3.3.1-4.5-.2.8-.7 1.3-1.5 1.2-1.2-.2-2.2-1.4-3.6-1.8-1.4-.4-2.8.1-3.8 1.4z"/><path d="M12 10.3v2"/></symbol>
+    <symbol id="figLadies" viewBox="0 0 24 24"><path d="M2.5 12c2.5-.8 4.7-3.4 6.9-3.4 1.2 0 1.9.5 2.6 1.2.7-.7 1.4-1.2 2.6-1.2 2.2 0 4.4 2.6 6.9 3.4-2.1 3.4-5.5 5.6-9.5 5.6S4.6 15.4 2.5 12z"/><path d="M4.4 12.2c2.6-.5 5.1-.7 7.6-.7s5 .2 7.6.7M4.4 12.2c2.5 1.2 5 1.8 7.6 1.8s5.1-.6 7.6-1.8"/></symbol>
+    <symbol id="figNerd" viewBox="0 0 24 24"><circle cx="7.1" cy="12.4" r="3.9"/><circle cx="16.9" cy="12.4" r="3.9"/><path d="M10.9 10.6c.6-1.1 1.6-1.1 2.2 0M3.7 10.4H2M20.3 10.4H22"/><path d="M5.4 13.7l2.6-2.6M15 12.5l1.5-1.5M16.3 14.5l2.3-2.3" stroke-width="1.3"/></symbol>
+  </defs>
+</svg>
+
+<div class="crt-card">
+  <div id="pageMain">
+  <div class="visualizer-container">
+    <canvas id="waveCanvas" width="800" height="480"></canvas>
+    <div class="crt-hz" id="freqDisplay"><strong>6.0</strong> <span>Hz</span></div>
+    <div class="crt-clock" id="timerDisplay">00:00</div>
+    <div class="crt-hint" id="crtHint"></div>
+    <button class="crt-expand" id="readoutFab" data-i18n-aria="enlarge" title="Enlarge the screen text" aria-label="Enlarge the screen text">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expand"/></svg>
+    </button>
+    <div class="screen-readout">
+      <div class="readout-title" id="readoutTitle" data-i18n="standbyTitle">▸ STANDBY</div><div class="readout-body"><span id="readoutTyped"></span><span id="readoutWarn"></span><i class="cur"></i></div>
+    </div>
+  </div>
+
+  
+  <div class="vol-row">
+    <button type="button" class="vol-btn" id="muteBtn" aria-pressed="false" data-i18n-aria="mute" title="Mute" aria-label="Mute">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-speaker"/><use class="ico-on" href="#i-waves"/><use class="ico-off" href="#i-x"/></svg>
+    </button>
+    <input type="range" id="masterVolSlider" min="0" max="1" value="0.35" step="0.01" data-i18n-aria="volume" aria-label="Volume">
+    <span class="val" id="masterVolValueLabel">35%</span>
+    <button type="button" class="vol-btn out-btn" id="carBtn" aria-haspopup="true" aria-expanded="false">
+      <svg class="ico ico-head" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-head"/></svg>
+      <svg class="ico ico-car" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-car"/></svg>
+    </button>
+    <div class="out-pop hidden" id="outPop" role="menu">
+      <div class="out-title" id="outTitle">PLAY ON</div>
+      <button type="button" class="out-opt" data-out="std" role="menuitemradio"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-head"/></svg><span><b id="outStd">HEADPHONES / PHONE</b><small id="outStdD"></small></span></button>
+      <button type="button" class="out-opt" data-out="car" role="menuitemradio"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-car"/></svg><span><b id="outCar">CAR SPEAKERS</b><small id="outCarD"></small></span></button>
+    </div>
+  </div>
+
+  
+  <div class="presets-row">
+    <button class="preset-btn" data-preset="deep">Deep Sleep</button>
+    <button class="preset-btn" data-preset="meditate">Meditate</button>
+    <button class="preset-btn" data-preset="astral">Astral Drift</button>
+    <button class="preset-btn" data-preset="descent">Dream Descent</button>
+    <button class="preset-btn" data-preset="read">Read</button>
+    <button class="preset-btn" data-preset="zen">Deep Relax</button>
+    <button class="preset-btn" data-preset="active">Active Focus</button>
+    <button class="preset-btn" data-preset="high">High Cognition</button>
+    <button class="preset-btn" data-preset="mask">Sensory Mask</button>
+  </div>
+
+  <div class="control-panel">
+    <div class="control-block noise-block">
+      <div class="section-title" data-i18n="noiseLayer">◉ NOISE LAYER</div>
+      <div class="noise-tabs">
+        <button class="noise-tab active" data-noise="none"></button>
+        <button class="noise-tab" data-noise="white"></button>
+        <button class="noise-tab" data-noise="pink"></button>
+        <button class="noise-tab" data-noise="brown"></button>
+        <button class="noise-tab" data-noise="deep"></button>
+      </div>
+      <div class="row adv-only">
+        <div class="row-top"><span data-i18n="noiseVolLabel">NOISE VOL</span><span class="val" id="noiseVolValueLabel">0%</span></div>
+        <input type="range" id="noiseVolSlider" min="0" max="1" value="0" step="0.01">
+      </div>
+      <div class="row adv-only">
+        <div class="row-top"><span data-i18n="softnessLabel">SOFTNESS</span><span class="val" id="noiseSoftValueLabel">50%</span></div>
+        <input type="range" id="noiseSoftSlider" min="0" max="100" value="50" step="1">
+      </div>
+    </div>
+
+    
+    <div class="panel-actions">
+      <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span id="advToggleLbl" data-i18n="advShow">ADVANCED</span></button>
+      <button type="button" class="unlock-chip" id="unlockBtn"><span id="unlockLbl">★ FULL VERSION</span></button>
+    </div>
+
+    <div class="adv-area adv-only">
+      <div class="control-grid">
+        <div class="control-block">
+          <div class="section-title" data-i18n="toneLayer">◈ TONE LAYER</div>
+          <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="pure"></button>
+            <button class="mode-tab" data-mode="harmonic"></button>
+            <button class="mode-tab" data-mode="binaural"></button>
+            <button class="mode-tab" data-mode="isochronic"></button>
+          </div>
+          <div class="row" id="freqRow">
+            <div class="row-top"><span data-i18n="freqLabel">FREQ</span><span class="val" id="freqValueLabel">40.0 Hz</span></div>
+            <input type="range" id="freqSlider" min="0" max="1000" value="430" step="1">
+          </div>
+          <div class="row hidden" id="carrierRow">
+            <div class="row-top"><span data-i18n="carrierLabel">CARRIER</span><span class="val" id="carrierValueLabel">200 Hz</span></div>
+            <input type="range" id="carrierSlider" min="80" max="600" value="200" step="1">
+          </div>
+          <div class="row hidden" id="beatRow">
+            <div class="row-top"><span data-i18n="beatLabel">BEAT</span><span class="val" id="beatValueLabel">40.0 Hz</span></div>
+            <input type="range" id="beatSlider" min="1" max="60" value="40" step="0.5">
+          </div>
+          <div class="row">
+            <div class="row-top"><span data-i18n="toneVolLabel">TONE VOL</span><span class="val" id="toneVolValueLabel">70%</span></div>
+            <input type="range" id="toneVolSlider" min="0" max="1" value="0.7" step="0.01">
+          </div>
+        </div>
+
+        <div class="control-column">
+          <div class="control-block">
+            <div class="section-title" data-i18n="tools">✦ TOOLS</div>
+            <div class="tools-row">
+              <button type="button" class="sleep-set" id="sleepSet"></button>
+              <button class="tool-btn" id="saveBtn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-save"/></svg><span data-i18n="saveBtn">SAVE</span></button>
+            </div>
+          </div>
+
+          
+          <div class="custom-presets-row hidden" id="customRow">
+            <span class="custom-label" data-i18n="myPresets">My Presets</span>
+            <div class="custom-chips" id="customChips" style="display:none; flex-wrap:wrap; gap:0.4rem;"></div>
+            <div class="custom-actions">
+              <button class="custom-chip" id="exportBtn" disabled data-i18n="exportBtn" data-i18n-title="exportTitle" title="Save your presets as text">⤓ EXPORT</button>
+            </div>
+            <span class="storage-warn hidden" id="storageWarn" data-i18n="storageWarn">⚠ storage blocked — use export</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kbd-hint" id="kbdHint"></div>
+  </div>
+  </div>
+
+  
+  <div id="pageAmbient" class="hidden">
+    <div class="amb-stage"><canvas id="ambCanvas" width="800" height="520"></canvas></div>
+    <nav class="amb-bar" aria-label="Ambient sounds">
+      <button type="button" data-amb="rain" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.5 1.5A3.5 3.5 0 0 1 17 15z"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/></svg><span class="lbl"></span>
+      </button>
+      <button type="button" data-amb="ac" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="12" rx="2"/><path d="M6 9h12M6 12h12M8 20l1-3M12 20l1-3M16 20l1-3"/></svg><span class="lbl"></span>
+      </button>
+      <button type="button" data-amb="fire" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.7 7-7 0-3-2-5-3-7-1 2-2 3-3 3 0-3-1-6-4-9 0 4-4 6-4 12 0 4.3 3 8 7 8z"/></svg><span class="lbl"></span>
+      </button>
+      <button type="button" data-amb="fan" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.6"/><path d="M12 10.4C11 6 12 3 15 3c2 0 2 3-3 7.4zM13.6 12c4-1 7 0 7 3 0 2-3 2-7.4-3zM12 13.6c1 4.4 0 7.4-3 7.4-2 0-2-3 3-7.4zM10.4 12c-4.4 1-7.4 0-7.4-3 0-2 3-2 7.4 3z"/></svg><span class="lbl"></span>
+      </button>
+      <span class="amb-sep"></span>
+      <button type="button" id="ambTimer" aria-label="Timer">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"/></svg><span class="lbl"></span>
+      </button>
+      <button type="button" id="ambVol" aria-label="Volume" aria-expanded="false">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-speaker"/><use href="#i-waves"/></svg><span class="lbl"></span>
+      </button>
+    </nav>
+    <div class="amb-vol-pop hidden" id="ambVolPop">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-speaker"/></svg>
+      <input type="range" id="ambVolSlider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume">
+      <span class="pct" id="ambVolPct">85%</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="name-overlay hidden" id="nameOverlay">
+  <div class="name-dialog">
+    <div class="name-dialog-title" data-i18n="nameTitle">◈ NAME THIS PRESET</div>
+    <input type="text" id="nameInput" maxlength="24" data-i18n-placeholder="namePlaceholder" placeholder="e.g. DEEP WORK" autocomplete="off" spellcheck="false">
+    <div class="name-dialog-actions">
+      <button class="name-btn" id="nameCancelBtn" data-i18n="cancel">Cancel</button>
+      <button class="name-btn save" id="nameSaveBtn" data-i18n="saveAction">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="name-overlay hidden" id="dataOverlay">
+  <div class="name-dialog">
+    <div class="name-dialog-title" id="dataTitle">◈ EXPORT PRESETS</div>
+    <div class="data-help" id="dataHelp"></div>
+    <textarea id="dataArea" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"></textarea>
+
+    <div class="data-actions" id="exportActions">
+      <button class="name-btn" id="dataCancelBtn" data-i18n="close">Close</button>
+      <button class="name-btn" id="dataCopyBtn" data-i18n="copy">Copy</button>
+      <button class="name-btn" id="dataShareBtn" data-i18n="share">Share</button>
+      <button class="name-btn save" id="dataDownloadBtn" data-i18n="download">Download .txt</button>
+    </div>
+
+    <div class="data-actions hidden" id="importActions">
+      <button class="name-btn" id="dataCancelBtn2" data-i18n="close">Close</button>
+      <button class="name-btn" id="dataPasteBtn" data-i18n="paste">Paste</button>
+      <button class="name-btn" id="dataFileBtn" data-i18n="fromFile">From file</button>
+      <button class="name-btn save" id="dataImportBtn" data-i18n="importAction">Import</button>
+    </div>
+
+    <input type="file" id="importFileInput" accept=".txt,.json,text/plain,application/json" style="display:none">
+  </div>
+</div>
+
+
+<div class="name-overlay hidden" id="unlockOverlay">
+  <div class="name-dialog unlock-dialog" role="dialog" aria-modal="true" aria-labelledby="unlockTitle">
+    <div class="name-dialog-title" id="unlockTitle">◈ FULL VERSION</div>
+    <div class="unlock-state" id="unlockState"></div>
+    <ul class="unlock-list" id="unlockList"></ul>
+    <div class="unlock-price" id="unlockPrice"></div>
+    <button type="button" class="name-btn save unlock-buy" id="unlockBuy">Get a key</button>
+    <label class="unlock-lbl" for="unlockInput" id="unlockInputLbl">Have a key?</label>
+    <input type="text" id="unlockInput" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="64" placeholder="XXXXX-XXXXX-XXXXX-XXXXX">
+    <div class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></div>
+    <div class="name-dialog-actions">
+      <button type="button" class="name-btn" id="unlockClose">Close</button>
+      <button type="button" class="name-btn save" id="unlockGo">Unlock</button>
+    </div>
+    <button type="button" class="tp-off hidden" id="unlockRemove">Remove the key from this device</button>
+  </div>
+</div>
+
+
+<div class="name-overlay hidden" id="tpOverlay">
+  <div class="name-dialog tp-dialog" role="dialog" aria-modal="true" aria-labelledby="tpTitle">
+    <div class="name-dialog-title" id="tpTitle">◈ SLEEP TIMER</div>
+    <div class="tp-quick" id="tpQuick"></div>
+    <div class="tp-wheels" dir="ltr">
+      <div class="tp-band"></div>
+      <div class="tp-col"><div class="tp-wheel" id="tpH" tabindex="0" role="spinbutton" aria-valuemin="0" aria-valuemax="12"></div><div class="tp-unit" id="tpHU"></div></div>
+      <div class="tp-col"><div class="tp-wheel" id="tpM" tabindex="0" role="spinbutton" aria-valuemin="0" aria-valuemax="59"></div><div class="tp-unit" id="tpMU"></div></div>
+    </div>
+    <button type="button" class="tp-off hidden" id="tpOff">Turn timer off</button>
+    <div class="name-dialog-actions">
+      <button type="button" class="name-btn" id="tpCancel">Cancel</button>
+      <button type="button" class="name-btn save" id="tpStart">Start</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="name-overlay hidden" id="wordsOverlay">
+  <div class="name-dialog words-dialog" role="dialog" aria-modal="true" aria-labelledby="wordsTitle">
+    <div class="words-head">
+      <div class="name-dialog-title" id="wordsTitle">◈ WORDS</div>
+      <button type="button" class="words-switch" id="wordsSwitch" aria-pressed="true">ON</button>
+    </div>
+    <div class="data-help" id="wordsHelp"></div>
+    <div class="words-every" id="wordsEvery"></div>
+    <div class="words-lockline" id="wordsLockLine"></div>
+    <div class="words-list" id="wordsList"></div>
+    <div class="words-msg" id="wordsMsg"></div>
+    <div class="name-dialog-actions">
+      <button type="button" class="name-btn save" id="wordsClose">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="creator-overlay hidden" id="creatorOverlay">
+  <div class="creator-dialog" role="dialog" aria-modal="true" aria-label="A word from the creator">
+    <button class="creator-x" id="creatorClose" aria-label="Close">✕</button>
+    <div class="creator-eyebrow">A word from the creator</div>
+    <div class="creator-quote" id="creatorQuote">Stay creative, boys</div>
+    <div class="creator-name">Designed by Attar</div>
+    <div class="creator-more">For more info</div>
+    <div class="creator-links">
+      <button type="button" class="creator-link" id="howBtn" data-i18n="howBtn">How it works</button>
+      <button type="button" class="creator-link" id="importBtn" data-i18n="importBtn">⤒ IMPORT</button>
+      <button type="button" class="creator-link" id="unlockInfoBtn"></button>
+      <a class="creator-link" href="https://instagram.com/Attar10x" target="_blank" rel="noopener">IG · Attar10x</a>
+      <a class="creator-link" href="mailto:Attar10x@gmail.com">Attar10x@gmail.com</a>
+    </div>
+  </div>
+</div>
+
+<div class="creator-overlay hidden" id="welcomeOverlay">
+  <div class="creator-dialog welcome" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <button class="creator-x" id="welcomeClose" aria-label="Close">✕</button>
+    <div class="creator-eyebrow" id="welcomeTitle" data-i18n="wTitle">WELCOME TO TAYF</div>
+    <ol class="welcome-steps">
+      <li><div><b data-i18n="wS1T">Pick a preset</b><span data-i18n="wS1D">Tap a goal such as Meditate or Deep Sleep.</span></div></li>
+      <li><div><b data-i18n="wS2T">Press Play</b><span data-i18n="wS2D">Start with the volume low and raise it slowly.</span></div></li>
+      <li><div><b data-i18n="wS3T">Set a timer</b><span data-i18n="wS3D">Pick 15, 30 or 60 minutes and it fades out by itself.</span></div></li>
+    </ol>
+    <div class="welcome-note"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-head"/></svg><span data-i18n="wNote">Binaural presets need headphones.</span></div>
+    <button type="button" class="name-btn save" id="welcomeGo" data-i18n="wGo">GOT IT</button>
+  </div>
+</div>
+
+
+<div class="zoom-overlay hidden" id="zoomOverlay">
+  <div class="zoom-dialog" role="dialog" aria-modal="true" aria-label="Enlarged screen text">
+    <button class="zoom-x" id="zoomClose" data-i18n-aria="close" aria-label="Close">✕</button>
+    <div class="zoom-title" id="zoomTitle">▸ STANDBY</div>
+    <div class="zoom-body"><span id="zoomTyped"></span><span id="zoomWarn"></span></div>
+
+    <div class="zoom-benefits" id="zoomBenefits" style="display:none;">
+      <div class="zoom-benefits-label" id="zoomBenefitsLabel">▸ What this band is linked to</div>
+      <div class="zoom-benefits-list" id="zoomBenefitsList"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/core/loop.js"></script>
+<script src="tayf-config.js"></script>
+<script src="js/core/sw-register.js"></script>
+<script src="js/core/unlock.js"></script>
+<script src="js/tayf/i18n.js"></script>
+<script src="js/tayf/crt.js"></script>
+<script src="js/tayf/tayf.js"></script>
+<script src="js/ui/theme.js"></script>
+<script src="js/ui/zoom.js"></script>
+<script src="js/ui/time-picker.js"></script>
+<script src="js/ui/words.js"></script>
+<script src="js/ambient/fire-grains.js"></script>
+<script src="js/ambient/ambient.js"></script>
+<script src="js/ambient/pixel.js"></script>
+<script src="js/ambient/scene-fan.js"></script>
+<script src="js/ambient/scene-fire.js"></script>
+<script src="js/ambient/scene-rain.js"></script>
+<script src="js/ambient/scene-ac.js"></script>
+</body>
+</html>
