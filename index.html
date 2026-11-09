@@ -252,10 +252,6 @@ try {
       <span class="val" id="mixVolPct">80%</span>
       <button type="button" class="mix-timer" id="mixTimer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"/></svg><span id="mixTimerLbl">Timer</span></button>
     </div>
-    
-    <button type="button" class="mix-panel-btn" id="mixPanelBtn" aria-expanded="false" aria-controls="mixPanel">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span id="mixPanelBtnLbl">Settings</span><svg class="ico chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14.5l5-5 5 5"/></svg>
-    </button>
     </div>
     <div class="side-controls">
     <div class="mix-mixes">
@@ -270,8 +266,11 @@ try {
     <div class="mix-body">
       <div class="mix-grid" id="mixGrid"></div>
     </div>
+      
+    <button type="button" class="mix-panel-btn" id="mixPanelBtn" aria-expanded="false" aria-controls="mixPanel">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span id="mixPanelBtnLbl">Settings</span><svg class="ico chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14.5l5-5 5 5"/></svg>
+    </button>
       <div class="control-block mix-panel" id="mixPanel">
-        <div class="mix-grab" aria-hidden="true"></div>
         <div class="mix-panel-head">
           <svg class="ico" id="mixPanelIco" viewBox="0 0 24 24" aria-hidden="true"></svg>
           <span class="mix-panel-name" id="mixPanelName"></span>
@@ -283,7 +282,6 @@ try {
           <div class="row mix-row"><div class="row-top"><span class="lbl"></span><span class="val"></span></div><input type="range" min="0" max="100" step="1"><div class="mix-ends"><span></span><span></span></div></div>
           <div class="row mix-row hidden"><div class="row-top"><span class="lbl"></span><span class="val"></span></div><input type="range" min="0" max="100" step="1"><div class="mix-ends"><span></span><span></span></div></div>
           <div class="row mix-row mix-row-gap"><div class="row-top"><span class="lbl"></span><span class="val"></span></div><input type="range" min="0" max="100" step="1"><div class="mix-ends"><span></span><span></span></div></div>
-          <div class="row mix-row"><div class="row-top"><span class="lbl"></span><span class="val"></span></div><input type="range" min="0" max="100" step="1"><div class="mix-ends"><span></span><span></span></div></div>
         </div>
       </div>
     </div>

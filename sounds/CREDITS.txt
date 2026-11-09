@@ -21,3 +21,8 @@ rain.m4a   - "Gentle Rain from Window" by YostPeter
 
 Each clip is 96 s: the app folds the last 6 s over the start so it loops without a seam.
 The full downloads live in sounds/_source/ on the owner's PC (not in git).
+
+thunder-normal.m4a, thunder-loud.m4a - two thunder strikes provided by the owner (2026-11-09).
+             Used in: Mix page, Thunder (single strikes at random, never looped; the loud one only from
+             Distance 70% up). Leading silence trimmed, peaks limited to -1 dBFS (the loud one was clipping),
+             AAC 160 kbps. Originals in sounds/_source/.
