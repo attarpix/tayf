@@ -16,7 +16,8 @@ fire.m4a   - "Aachen_Burning Fireplace Crackling Fire Sounds" by visionear
 
 rain.m4a   - "Gentle Rain from Window" by YostPeter
              https://freesound.org/people/YostPeter/sounds/523405/
-             Used in: Ambient page, Rain.
+             Used in: Ambient page, Rain (the Mix page computes its rain since 2026-11-11, js/core/rain.js,
+             tuned against this clip).
              Cut 0:37-2:13, distant traffic rumble removed (high-pass 250 Hz), hiss softened, levelled.
 
 Each clip is 96 s: the app folds the last 6 s over the start so it loops without a seam.

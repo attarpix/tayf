@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rain engine</title>
+<!-- "Rain from one equation" (the rain engine), opened inside Tayf on its own hidden page (index.html #pageRain).
+     One file for both languages: it follows the app (?lang=ar, or the app's saved language). No fonts from the
+     internet: Arabic uses the app's own Noto Naskh, the rest falls back to the phone's own fonts (works offline). -->
+<script>
+try {
+  var q = new URLSearchParams(location.search).get('lang'), ar = q ? q === 'ar' : localStorage.getItem('tayf_lang_v1') === 'ar';
+  if (ar) { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/brain.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 data-t="h1">Rain from one equation</h1>
+    <p class="lede" data-t="lede">Nothing on this page is a recording. Every sound is calculated while you listen, <span id="rate">48,000</span> times a second, right in your browser. We start with a single sine wave and add one idea at a time until it rains.</p>
+  </header>
+
+  <section class="stage" id="stage" aria-labelledby="stageH">
+    <div class="stage-head">
+      <div>
+        <h2 id="stageH" data-t="stageH">Inside the engine</h2>
+        <p data-t="stageP">The brain behind the rain is nine small equations.</p>
+      </div>
+      <div class="modes" role="group" aria-label="Other ways in">
+        <button class="btn" id="mBuild" type="button" data-t="mBuild">Build it yourself</button>
+        <button class="btn" id="mControl" type="button" data-t="mControl">Control it like in Mix</button>
+      </div>
+    </div>
+    <div class="tour tour-end" id="tourEnd" hidden>
+      <h3 data-t="endT">That’s the rain. What next?</h3>
+      <div class="tour-choices">
+        <button class="btn primary" type="button" id="eAgain" data-t="endAgain">Watch again</button>
+        <button class="btn" type="button" id="eBuild" data-t="mBuild">Build it yourself</button>
+        <button class="btn" type="button" id="eControl" data-t="mControl">Control it like in Mix</button>
+      </div>
+    </div>
+    <div class="scene">
+      <!-- the tour's words sit ON the picture, at its top, with no box (owner): the canvas grows by their height
+           and draws the animation below them, so they never cover it -->
+      <div class="tour tour-cap" id="tour" hidden aria-live="polite">
+        <div class="tour-top"><span class="tour-n" id="tourN"></span>
+          <button type="button" class="tour-x" id="tClose" aria-label="Close the tour" data-t-aria="tClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <p id="tourText"></p>
+      </div>
+      <canvas id="rainView" role="img" aria-label="Rain falling on water" data-t-aria="sceneAria"></canvas>
+      <!-- the tour's controls live ON the picture (owner's sketch): back on the left edge, next on the right edge,
+           play / pause bottom left, the step dots + time bar bottom right -->
+      <div class="tour-nav" id="tourNav" hidden>
+        <button type="button" class="tn prev" id="tPrev" aria-label="Previous step" data-t-aria="tPrev"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button type="button" class="tn next" id="tNext" aria-label="Next step" data-t-aria="tNext"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button type="button" class="tn play" id="tPause" aria-label="Pause" data-t-aria="tPause"></button>
+        <div class="tn-prog"><span class="tour-dots" id="tourDots"></span><div class="tour-bar"><i id="tourFill"></i></div></div>
+      </div>
+      <!-- step 1 only: how fast the point goes round, from slowed down to the real 1,000 turns a second -->
+      <label class="spd" id="sineSpd" hidden><span data-t="spdL">Speed</span><input type="range" id="sineRange" min="0" max="100" value="0" aria-label="Speed"><output id="sineOut"></output></label>
+      <!-- step 5 only: the noise slowed down (one pick every 0.4 s: you hear single clicks) or at its real speed (the hiss) -->
+      <div class="spd nspd" id="noiseSpd" role="group" hidden><button type="button" id="nSlow" data-t="nSlow" aria-pressed="true">Slowed down</button><button type="button" id="nReal" data-t="nReal" aria-pressed="false">Real speed</button></div>
+      <div class="meter" aria-live="off">
+        <div class="big"><b id="xRate">0</b><span data-t="mRate">calculations a second</span></div>
+        <div><b id="xOps">0</b><span data-t="mOps">calculations so far</span></div>
+        <div><b id="xSamples">0</b><span data-t="mSamples">sound samples made</span></div>
+        <div><b id="xStream" class="hotnum">0 KB</b><span data-t="mStream">streaming the same would download</span></div>
+        <div><b data-t="zeroBytes">0 bytes</b><span data-t="mHere">downloaded here</span></div>
+        <span class="wide" data-t="mNote">Streaming counted at 128 kbps, a typical music stream.</span>
+      </div>
+    </div>
+    <div class="engine"><svg id="engine" role="group" aria-label="The engine" data-t-aria="engineAria"></svg>
+      <p class="eng-note" id="engNote" aria-live="polite"><b id="engNoteN"></b><span id="engNoteT"></span></p></div>
+    <div class="stage-ctl">
+      <button class="btn primary" id="apart"></button>
+      <button class="btn" id="finished" data-t="finished">Hear the finished rain</button>
+    </div>
+  </section>
+
+  <!-- the hand-off: above, the engine runs by itself; below, you run it -->
+  <div class="bridge" id="bridge">
+    <ol class="route">
+      <li class="passed"><b>1</b><span data-t="route1">Watch the engine run</span></li>
+      <li><b>2</b><span data-t="route2">Build it yourself</span></li>
+    </ol>
+    <p data-t="bridgeP">You’ve seen all nine equations working together. Now take them apart: the rain goes back to a single tone, and you switch each equation on and set its number.</p>
+    <button class="btn primary" id="toBuild" type="button" data-t="toBuild">Build it yourself ↓</button>
+  </div>
+
+  <section class="stage stage2" id="stage2" aria-labelledby="ctrlH">
+    <p class="eyebrow"><span data-t="eye2">2 · your turn</span><span class="scan-state" id="buildState"></span></p>
+    <div class="s2-head">
+      <div class="s2-title">
+        <h2 id="ctrlH" data-t="ctrlH">Build the brain yourself</h2>
+        <p data-t="ctrlP">Switch the nine equations on one by one and set each number. The small screen shows the rain you are building, live. Or let the Rain controller from Mix set everything for you.</p>
+      </div>
+      <figure class="mini"><canvas id="miniView" aria-hidden="true"></canvas><figcaption data-t="miniCap">what you’re building, live</figcaption></figure>
+    </div>
+    <div class="s2-body">
+      <div class="s2-build">
+        <p class="cap" data-t="boardCap">The nine equations · tap a number to switch it on</p>
+        <ol class="board" id="board"></ol>
+        <div class="build-ctl">
+          <button class="btn" id="bClear" data-t="bClear">Start from one tone</button>
+          <button class="btn" id="bAll" data-t="bAll">Switch all nine on</button>
+        </div>
+      </div>
+      <div class="s2-mix">
+        <p class="cap" data-t="mixCap">Or the Rain controller from Mix</p>
+        <div class="knobs">
+          <label class="knob" for="mxA">
+            <span class="kn"><span data-t="kStrength">Strength</span><output id="mxAo">35%</output></span>
+            <input type="range" id="mxA" min="0" max="100" value="35">
+            <span class="ends"><i data-t="drizzle">Drizzle</i><i data-t="downpour">Downpour</i></span>
+          </label>
+          <label class="knob" for="mxB">
+            <span class="kn"><span data-t="kDistance">Distance</span><output id="mxBo">70%</output></span>
+            <input type="range" id="mxB" min="0" max="100" value="70">
+            <span class="ends"><i data-t="far">Far</i><i data-t="close">Close</i></span>
+          </label>
+        </div>
+        <p class="cap" data-t="calcCap">What the app does with them</p>
+        <div class="calc-wrap"><table class="calc" id="calc"></table></div>
+      </div>
+    </div>
+    <p class="note" data-t="ctrlNote">In the app these sliders blend four layers: drizzle drops, the real rain recording, a heavy hiss and a low rumble. On this page the same numbers move the equations’ settings instead (the arrows show where each one goes), so you can hear and see what each slider does.</p>
+  </section>
+
+  <header class="sec-head">
+    <p class="sec-n" data-t="secN">3 · up close</p>
+    <h2 data-t="secH">Every step, up close</h2>
+    <p data-t="secP">Each equation with its own picture, its numbers to play with and its code.</p>
+  </header>
+  <div class="layout">
+    <main class="pipeline" id="pipeline"></main>
+
+    <aside class="panel" aria-label="Playback" data-t-aria="panel">
+      <h2 data-t="speaker">The speaker</h2>
+      <p class="status" id="status"></p>
+      <div class="transport">
+        <button class="btn primary" id="play"></button>
+        <button class="btn" id="add" data-t="add">Add step</button>
+        <button class="btn" id="remove" data-t="remove">Remove step</button>
+      </div>
+      <div class="live">
+        <canvas id="outWave"></canvas><p data-t="outWave">What reaches the speaker</p>
+        <canvas id="outSpec"></canvas><p data-t="outSpec">Its frequencies, low to high</p>
+      </div>
+      <div class="presets">
+        <p data-t="presets">Jump to the finished rain</p>
+        <div id="presets"></div>
+      </div>
+      <div class="extra">
+        <button class="btn" id="auto"></button>
+        <label class="vol"><span data-t="vol">Volume</span> <input type="range" id="vol" min="0" max="100" value="70"></label>
+      </div>
+    </aside>
+  </div>
+
+  <footer data-t="footer">Tip for sharing: press “Build it automatically”, then record your screen. It plays each step for eight seconds before adding the next. Keyboard: space plays or stops, the right arrow adds a step, the left arrow removes one. The drop model follows Minnaert’s bubble resonance and van den Doel’s physically based liquid sounds. The finished “Rain in Tayf” is tuned to match the frequency balance of the Rain in the Tayf app.</footer>
+</div>
+
+<script src="js/brain/brain.js"></script>
+</body>
+</html>
