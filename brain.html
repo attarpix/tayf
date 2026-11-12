@@ -13,6 +13,7 @@ try {
   if (ar) { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
 } catch (e) {}
 </script>
+<script src="js/core/sw-register.js"></script><!-- local testing: clears a leftover offline copy, so this page is never an old one -->
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/brain.css">
 </head>
@@ -21,6 +22,13 @@ try {
   <header class="top">
     <h1 data-t="h1">Rain from one equation</h1>
     <p class="lede" data-t="lede">Nothing on this page is a recording. Every sound is calculated while you listen, <span id="rate">48,000</span> times a second, right in your browser. We start with a single sine wave and add one idea at a time until it rains.</p>
+    <!-- the page is long: where its three parts are, and the way back to the film -->
+    <nav class="jump" aria-label="On this page" data-t-aria="jumpAria">
+      <a href="#stage"><b>1</b><span data-t="jump1">Watch</span></a>
+      <a href="#stage2"><b>2</b><span data-t="jump2">Build</span></a>
+      <a href="#sec3"><b>3</b><span data-t="jump3">Up close</span></a>
+      <button type="button" class="film" id="toFilm" data-t="toFilm">Watch the film</button>
+    </nav>
   </header>
 
   <section class="stage" id="stage" aria-labelledby="stageH">
@@ -54,8 +62,12 @@ try {
            tap right = next, tap left = back. Hidden unless the story runs. -->
       <div class="story" id="story" hidden>
         <div class="st-tap" id="stTap"></div>
+        <!-- the film layer: fade from black, the flash when an equation lands, the chapter title card -->
+        <i class="st-black" id="stBlack"></i><i class="st-flash" id="stFlash"></i>
+        <div class="st-chap" id="stChap" hidden><span>Chapter</span><b id="stChapN"></b><em id="stChapT"></em></div>
         <div class="st-top"><div class="st-bars" id="stBars"></div>
           <div class="st-row"><span id="stCh"></span>
+            <button type="button" class="st-skip" id="stSkip" hidden>Skip</button>
             <button type="button" class="st-voice" id="stVoice" aria-label="Voice" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div></div>
         <p class="st-sub" id="stSub"></p>
         <div class="st-card" id="stTitle">
@@ -63,8 +75,10 @@ try {
           <p>A story in nine chapters. Sound on.</p>
           <button type="button" class="st-play" id="stBegin" aria-label="Begin the story"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
           <p class="st-small">It tells itself. Tap the right side to skip ahead, the left side to go back.</p>
+          <button type="button" class="st-btn st-skipfilm" id="stSkipFilm" hidden>Skip the film</button>
         </div>
         <div class="st-card st-end" id="stEnd" hidden>
+          <ol class="st-eqs" id="stEqs" aria-label="The nine equations"></ol>
           <h2>You built rain.</h2>
           <p>Nine small equations, calculated live, 48,000 times a second.</p>
           <button type="button" class="st-btn main" id="stTry">Try it to understand more</button>
@@ -143,14 +157,14 @@ try {
             <span class="ends"><i data-t="far">Far</i><i data-t="close">Close</i></span>
           </label>
         </div>
-        <p class="cap" data-t="calcCap">What the app does with them</p>
-        <div class="calc-wrap"><table class="calc" id="calc"></table></div>
+        <details class="fold" id="calcFold"><summary class="cap" data-t="calcCap">What the app does with them</summary>
+        <div class="calc-wrap"><table class="calc" id="calc"></table></div></details>
       </div>
     </div>
     <p class="note" data-t="ctrlNote">In the app these sliders blend four layers: drizzle drops, the real rain recording, a heavy hiss and a low rumble. On this page the same numbers move the equations’ settings instead (the arrows show where each one goes), so you can hear and see what each slider does.</p>
   </section>
 
-  <header class="sec-head">
+  <header class="sec-head" id="sec3">
     <p class="sec-n" data-t="secN">3 · up close</p>
     <h2 data-t="secH">Every step, up close</h2>
     <p data-t="secP">Each equation with its own picture, its numbers to play with and its code.</p>
